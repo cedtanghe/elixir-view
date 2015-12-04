@@ -160,7 +160,7 @@ class Manager implements ViewContextInterface
     /**
      * {@inheritdoc}
      */
-    public function injectTo(ContextInterface $context)
+    public function injectInto(ContextInterface $context)
     {
         $context->setView($this);
         return $context;

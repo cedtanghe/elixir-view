@@ -24,5 +24,5 @@ interface ViewContextInterface extends ViewInterface
      * @param ContextInterface $context
      * @return ContextInterface
      */
-    public function injectTo(ContextInterface $context);
+    public function injectInto(ContextInterface $context);
 }
