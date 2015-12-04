@@ -4,6 +4,8 @@ namespace Elixir\View\Engine\PHP;
 
 use Elixir\Dispatcher\DispatcherInterface;
 use Elixir\Dispatcher\DispatcherTrait;
+use Elixir\Helper\HelperInterface;
+use Elixir\Helper\HelperManager;
 use Elixir\View\Context\ContextInterface;
 use Elixir\View\Engine\PHP\SectionManager;
 use Elixir\View\SharedTrait;
@@ -45,8 +47,14 @@ class PHP implements ViewContextInterface, DispatcherInterface
     /**
      * @var callable 
      */
-    protected $escaper = null;
+    protected $escaper;
     
+    /**
+     * @var HelperManager
+     */
+    protected $helperManager;
+
+
     /**
      * @param callable $escaper
      */
@@ -67,8 +75,17 @@ class PHP implements ViewContextInterface, DispatcherInterface
             'close',
             'section',
             'escape',
-            'context'
+            'context',
+            'helper'
         ]);
+    }
+    
+    /**
+     * @param callable $escaper
+     */
+    public function setEscaper(callable $escaper)
+    {
+        $this->escaper = $escaper;
     }
     
     /**
@@ -112,6 +129,38 @@ class PHP implements ViewContextInterface, DispatcherInterface
         return $context;
     }
     
+    /**
+     * @param HelperManager $manager
+     */
+    public function setHelperManager(HelperManager $manager)
+    {
+        $this->helperManager = $manager;
+        $this->helperManager->setContext($this);
+    }
+    
+    /**
+     * @return HelperManager
+     */
+    public function getHelperManager()
+    {
+        return $this->helperManager;
+    }
+    
+    /**
+     * @param string $name
+     * @param array $options
+     * @return HelperInterface
+     */
+    public function helper($name, array $options = [])
+    {
+        if ($this->helperManager)
+        {
+            return $this->helperManager->get($name, $options);
+        }
+        
+        throw new \InvalidArgumentException(sprintf('Helper "%s" is not defined.', $name));
+    }
+
     /**
      * @param string $template
      */
