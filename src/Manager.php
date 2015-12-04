@@ -2,17 +2,24 @@
 
 namespace Elixir\View;
 
+use Elixir\View\Context\ContextInterface;
 use Elixir\View\SharedTrait;
 use Elixir\View\StorageInterface;
+use Elixir\View\ViewContextInterface;
 use Elixir\View\ViewInterface;
 
 /**
  * @author Cédric Tanghe <ced.tanghe@gmail.com>
  */
-class Manager implements ViewInterface
+class Manager implements ViewContextInterface
 {
     use SharedTrait;
     
+    /**
+     * @var ContextInterface 
+     */
+    protected $context;
+
     /**
      * @var array
      */
@@ -60,6 +67,11 @@ class Manager implements ViewInterface
         if ($defaultEngine) 
         {
             $this->defaultEngine = $engine;
+        }
+        
+        if ($this->context && $engine instanceof ViewContextInterface)
+        {
+            $engine->setContext($this->context);
         }
     }
     
@@ -119,6 +131,39 @@ class Manager implements ViewInterface
         }
         
         return $engines;
+    }
+    
+    /**
+     * {@inheritdoc}
+     */
+    public function setContext(ContextInterface $context = null)
+    {
+        $this->context = $context;
+        
+        foreach ($this->allEngines(false) as $engine)
+        {
+            if ($engine instanceof ViewContextInterface)
+            {
+                $engine->setContext($this->context);
+            }
+        }
+    }
+    
+    /**
+     * {@inheritdoc}
+     */
+    public function context()
+    {
+        return $this->context;
+    }
+    
+    /**
+     * {@inheritdoc}
+     */
+    public function injectTo(ContextInterface $context)
+    {
+        $context->setView($this);
+        return $context;
     }
 
     /**

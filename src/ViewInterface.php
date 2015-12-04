@@ -30,7 +30,7 @@ interface ViewInterface
      * @return boolean
      */
     public function isShared($key);
-
+    
     /**
      * @param string|StorageInterface $template
      * @param array $parameters

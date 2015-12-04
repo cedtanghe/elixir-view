@@ -4,14 +4,15 @@ namespace Elixir\View\Engine\PHP;
 
 use Elixir\Dispatcher\DispatcherInterface;
 use Elixir\Dispatcher\DispatcherTrait;
+use Elixir\View\Context\ContextInterface;
 use Elixir\View\Engine\PHP\SectionManager;
 use Elixir\View\SharedTrait;
-use Elixir\View\ViewInterface;
+use Elixir\View\ViewContextInterface;
 
 /**
  * @author Cédric Tanghe <ced.tanghe@gmail.com>
  */
-class PHP implements ViewInterface, DispatcherInterface 
+class PHP implements ViewContextInterface, DispatcherInterface 
 {
     use SharedTrait;
     use DispatcherTrait;
@@ -25,6 +26,11 @@ class PHP implements ViewInterface, DispatcherInterface
      * @var string 
      */
     protected $parent;
+    
+    /**
+     * @var ContextInterface
+     */
+    protected $context;
     
     /**
      * @var Parser
@@ -61,6 +67,7 @@ class PHP implements ViewInterface, DispatcherInterface
             'close',
             'section',
             'escape',
+            'context'
         ]);
     }
     
@@ -78,6 +85,31 @@ class PHP implements ViewInterface, DispatcherInterface
     public function getDefaultTemplateExtension()
     {
         return 'ph(tml|p)';
+    }
+    
+    /**
+     * {@inheritdoc}
+     */
+    public function setContext(ContextInterface $context = null)
+    {
+        $this->context = $context;
+    }
+    
+    /**
+     * {@inheritdoc}
+     */
+    public function context()
+    {
+        return $this->context;
+    }
+    
+    /**
+     * {@inheritdoc}
+     */
+    public function injectTo(ContextInterface $context)
+    {
+        $context->setView($this);
+        return $context;
     }
     
     /**
@@ -176,5 +208,13 @@ class PHP implements ViewInterface, DispatcherInterface
         }
         
         return $content;
+    }
+    
+    /**
+     * @ignore
+     */
+    public function __clone() 
+    {
+        $this->context = null;
     }
 }
