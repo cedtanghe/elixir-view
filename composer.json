@@ -1,0 +1,32 @@
+{
+    "name": "elixir/elixir-view",
+    "description": "Templating component",
+    "version": "1.0.0",
+    "license": "BSD-3-Clause",
+    "keywords": [
+        "elixir",
+        "view",
+        "template"
+    ],
+    "homepage": "https://github.com/cedtanghe/elixir-view",
+    "repositories": [
+    ],
+    "require": {
+        "php": ">=5.4"
+    },
+    "require-dev": {
+        "phpunit/PHPUnit": "~4.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Elixir\\View\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Elixir\\Test\\View\\": "tests/"
+        }
+    },
+    "suggest": {
+    }
+}
