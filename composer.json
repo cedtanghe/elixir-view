@@ -16,7 +16,8 @@
         }
     ],
     "require": {
-        "php": ">=5.4"
+        "php": ">=5.4",
+        "elixir/elixir-dispatcher": "*"
     },
     "require-dev": {
         "phpunit/PHPUnit": "~4.0"
@@ -32,6 +33,5 @@
         }
     },
     "suggest": {
-        "elixir/elixir-dispatcher": "*"
     }
 }
