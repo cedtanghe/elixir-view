@@ -66,7 +66,7 @@ class SectionManager implements DispatcherInterface
      */
     public function parent()
     {
-        return '{PARENT_SECTION}';
+        return '{{PARENT_SECTION}}';
     }
 
     /**
@@ -92,7 +92,7 @@ class SectionManager implements DispatcherInterface
     {
         if (isset($this->sections[$section])) 
         {
-            return sprintf('{SECTION : %s}', $section);
+            return sprintf('{{SECTION : %s}}', $section);
         }
 
         return '';
@@ -121,9 +121,9 @@ class SectionManager implements DispatcherInterface
                 $replace = $content;
             }
 
-            if (false !== strpos($content, '{SECTION :'))
+            if (false !== strpos($content, '{{SECTION :'))
             {
-                if (preg_match_all('/{SECTION : (.+)}/', $content, $matches)) 
+                if (preg_match_all('/{{SECTION : (.+)}}/', $content, $matches)) 
                 {
                     foreach ($matches[1] as $s)
                     {
