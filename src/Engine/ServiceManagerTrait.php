@@ -50,6 +50,7 @@ trait ServiceManagerTrait
      * @param string $name
      * @param array $options
      * @return HelperInterface
+     * @throws \InvalidArgumentException
      */
     public function helper($name, array $options = [])
     {
@@ -81,6 +82,7 @@ trait ServiceManagerTrait
      * @param string $name
      * @param array $options
      * @return FilterInterface
+     * @throws \InvalidArgumentException
      */
     public function filter($name, array $options = [])
     {
@@ -112,6 +114,7 @@ trait ServiceManagerTrait
      * @param string $name
      * @param array $options
      * @return ValidatorInterface
+     * @throws \InvalidArgumentException
      */
     public function validator($name, array $options = [])
     {
