@@ -7,7 +7,7 @@ use Elixir\View\Engine\ServiceManagerTrait;
 use Elixir\View\Engine\Twig\Extension;
 use Elixir\View\SharedTrait;
 use Elixir\View\StorageInterface;
-use Elixir\View\ViewInterface;
+use Elixir\View\ViewContextInterface;
 use Twig_Environment;
 use Twig_Loader_Filesystem;
 use Twig_Loader_String;
@@ -16,7 +16,7 @@ use Twig_LoaderInterface;
 /**
  * @author Cédric Tanghe <ced.tanghe@gmail.com>
  */
-class Twig implements ViewInterface
+class Twig implements ViewContextInterface
 {
     use ServiceManagerTrait;
     use SharedTrait;
