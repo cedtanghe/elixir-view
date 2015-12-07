@@ -37,6 +37,9 @@
         }
     },
     "suggest": {
-        "elixir/elixir-helper": "*"
+        "elixir/elixir-helper": "*",
+        "elixir/elixir-validator": "*",
+        "elixir/elixir-filter": "*",
+        "twig/twig": "~1.0"
     }
 }

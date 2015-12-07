@@ -4,10 +4,9 @@ namespace Elixir\View\Engine\PHP;
 
 use Elixir\Dispatcher\DispatcherInterface;
 use Elixir\Dispatcher\DispatcherTrait;
-use Elixir\Helper\HelperInterface;
-use Elixir\Helper\HelperManager;
-use Elixir\View\Context\ContextInterface;
+use Elixir\View\Engine\ContextTrait;
 use Elixir\View\Engine\PHP\SectionManager;
+use Elixir\View\Engine\ServiceManagerTrait;
 use Elixir\View\SharedTrait;
 use Elixir\View\ViewContextInterface;
 
@@ -17,6 +16,8 @@ use Elixir\View\ViewContextInterface;
 class PHP implements ViewContextInterface, DispatcherInterface 
 {
     use SharedTrait;
+    use ServiceManagerTrait;
+    use ContextTrait;
     use DispatcherTrait;
     
     /**
@@ -28,11 +29,6 @@ class PHP implements ViewContextInterface, DispatcherInterface
      * @var string 
      */
     protected $parent;
-    
-    /**
-     * @var ContextInterface
-     */
-    protected $context;
     
     /**
      * @var Parser
@@ -49,12 +45,6 @@ class PHP implements ViewContextInterface, DispatcherInterface
      */
     protected $escaper;
     
-    /**
-     * @var HelperManager
-     */
-    protected $helperManager;
-
-
     /**
      * @param callable $escaper
      */
@@ -76,7 +66,9 @@ class PHP implements ViewContextInterface, DispatcherInterface
             'section',
             'escape',
             'context',
-            'helper'
+            'helper',
+            'filter',
+            'validator'
         ]);
     }
     
@@ -102,63 +94,6 @@ class PHP implements ViewContextInterface, DispatcherInterface
     public function getDefaultTemplateExtension()
     {
         return 'ph(tml|p)';
-    }
-    
-    /**
-     * {@inheritdoc}
-     */
-    public function setContext(ContextInterface $context = null)
-    {
-        $this->context = $context;
-    }
-    
-    /**
-     * {@inheritdoc}
-     */
-    public function context()
-    {
-        return $this->context;
-    }
-    
-    /**
-     * {@inheritdoc}
-     */
-    public function injectInto(ContextInterface $context)
-    {
-        $context->setView($this);
-        return $context;
-    }
-    
-    /**
-     * @param HelperManager $manager
-     */
-    public function setHelperManager(HelperManager $manager)
-    {
-        $this->helperManager = $manager;
-        $this->helperManager->setContext($this);
-    }
-    
-    /**
-     * @return HelperManager
-     */
-    public function getHelperManager()
-    {
-        return $this->helperManager;
-    }
-    
-    /**
-     * @param string $name
-     * @param array $options
-     * @return HelperInterface
-     */
-    public function helper($name, array $options = [])
-    {
-        if ($this->helperManager)
-        {
-            return $this->helperManager->get($name, $options);
-        }
-        
-        throw new \InvalidArgumentException(sprintf('Helper "%s" is not defined.', $name));
     }
 
     /**
@@ -237,7 +172,7 @@ class PHP implements ViewContextInterface, DispatcherInterface
         
         try
         {
-            $content = $this->parser->parse($template, $parameters);
+            $content = $this->parser->parse($template, $parameters + $this->shared);
         }
         catch(\Exception $e)
         {
@@ -257,13 +192,5 @@ class PHP implements ViewContextInterface, DispatcherInterface
         }
         
         return $content;
-    }
-    
-    /**
-     * @ignore
-     */
-    public function __clone() 
-    {
-        $this->context = null;
     }
 }
