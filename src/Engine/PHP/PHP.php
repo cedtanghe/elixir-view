@@ -60,6 +60,7 @@ class PHP implements ViewContextInterface, DispatcherInterface
         
         $this->parser = new Parser($this, [
             'extend',
+            'share',
             'open',
             'parent',
             'close',
