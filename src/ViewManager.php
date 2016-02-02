@@ -11,7 +11,7 @@ use Elixir\View\ViewInterface;
 /**
  * @author Cédric Tanghe <ced.tanghe@gmail.com>
  */
-class Manager implements ViewContextInterface
+class ViewManager implements ViewContextInterface
 {
     use SharedTrait;
     
