@@ -10,17 +10,9 @@
     ],
     "homepage": "https://github.com/cedtanghe/elixir-view",
     "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/cedtanghe/elixir-dispatcher"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/cedtanghe/elixir-helper"
-        }
     ],
     "require": {
-        "php": ">=5.4",
+        "php": ">=5.6",
         "elixir/elixir-dispatcher": "*"
     },
     "require-dev": {
