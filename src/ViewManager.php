@@ -3,10 +3,6 @@
 namespace Elixir\View;
 
 use Elixir\View\Context\ContextInterface;
-use Elixir\View\SharedTrait;
-use Elixir\View\StorageInterface;
-use Elixir\View\ViewContextInterface;
-use Elixir\View\ViewInterface;
 
 /**
  * @author Cédric Tanghe <ced.tanghe@gmail.com>
@@ -14,9 +10,9 @@ use Elixir\View\ViewInterface;
 class ViewManager implements ViewContextInterface
 {
     use SharedTrait;
-    
+
     /**
-     * @var ContextInterface 
+     * @var ContextInterface
      */
     protected $context;
 
@@ -26,7 +22,7 @@ class ViewManager implements ViewContextInterface
     protected $engines = [];
 
     /**
-     * @var ViewInterface 
+     * @var ViewInterface
      */
     protected $defaultEngine;
 
@@ -35,14 +31,13 @@ class ViewManager implements ViewContextInterface
      */
     public function getDefaultTemplateExtension()
     {
-        if ($this->defaultEngine)
-        {
+        if ($this->defaultEngine) {
             return $this->defaultEngine->getDefaultTemplateExtension();
         }
-        
+
         return null;
     }
-    
+
     /**
      * @return ViewInterface
      */
@@ -52,47 +47,46 @@ class ViewManager implements ViewContextInterface
     }
 
     /**
-     * @param string $name
+     * @param string        $name
      * @param ViewInterface $engine
-     * @param string $extension
-     * @param boolean $defaultEngine
+     * @param string        $extension
+     * @param bool          $defaultEngine
      */
     public function registerEngine($name, ViewInterface $engine, $extension = null, $defaultEngine = true)
     {
         $this->engines[$name] = [
-            'extension' => $extension ? : $engine->getDefaultTemplateExtension(),
-            'engine' => $engine
+            'extension' => $extension ?: $engine->getDefaultTemplateExtension(),
+            'engine' => $engine,
         ];
 
-        if ($defaultEngine) 
-        {
+        if ($defaultEngine) {
             $this->defaultEngine = $engine;
         }
-        
-        if ($this->context && $engine instanceof ViewContextInterface)
-        {
+
+        if ($this->context && $engine instanceof ViewContextInterface) {
             $engine->setContext($this->context);
         }
     }
-    
+
     /**
      * @param string $name
-     * @return boolean
+     *
+     * @return bool
      */
     public function hasEngine($name)
     {
         return isset($this->engines[$name]);
     }
-    
+
     /**
      * @param string $name
-     * @param mixed $default
+     * @param mixed  $default
+     *
      * @return ViewInterface|mixed
      */
-    public function getEngine($name, $default = null) 
+    public function getEngine($name, $default = null)
     {
-        if (isset($this->_engines[$name]))
-        {
+        if (isset($this->_engines[$name])) {
             return $this->_engines[$name]['engine'];
         }
 
@@ -101,15 +95,14 @@ class ViewManager implements ViewContextInterface
 
     /**
      * @param string $extension
-     * @param mixed $default
+     * @param mixed  $default
+     *
      * @return ViewInterface|mixed
      */
-    public function getEngineByExtension($extension, $default = null) 
+    public function getEngineByExtension($extension, $default = null)
     {
-        foreach ($this->engines as $name => $data)
-        {
-            if (preg_match('/' . $data['extension'] . '/i', $extension)) 
-            {
+        foreach ($this->engines as $name => $data) {
+            if (preg_match('/'.$data['extension'].'/i', $extension)) {
                 return $value['engine'];
             }
         }
@@ -118,37 +111,35 @@ class ViewManager implements ViewContextInterface
     }
 
     /**
-     * @param boolean $withInfos
+     * @param bool $withInfos
+     *
      * @return array
      */
-    public function allEngines($withInfos = false) 
+    public function allEngines($withInfos = false)
     {
         $engines = [];
 
-        foreach ($this->engines as $name => $data) 
-        {
+        foreach ($this->engines as $name => $data) {
             $engines[] = $withInfos ? $data + ['default' => $data['engine'] === $this->defaultEngine] : $data['engine'];
         }
-        
+
         return $engines;
     }
-    
+
     /**
      * {@inheritdoc}
      */
     public function setContext(ContextInterface $context = null)
     {
         $this->context = $context;
-        
-        foreach ($this->allEngines(false) as $engine)
-        {
-            if ($engine instanceof ViewContextInterface)
-            {
+
+        foreach ($this->allEngines(false) as $engine) {
+            if ($engine instanceof ViewContextInterface) {
                 $engine->setContext($this->context);
             }
         }
     }
-    
+
     /**
      * {@inheritdoc}
      */
@@ -156,48 +147,44 @@ class ViewManager implements ViewContextInterface
     {
         return $this->context;
     }
-    
+
     /**
      * {@inheritdoc}
      */
     public function injectInto(ContextInterface $context)
     {
         $context->setView($this);
+
         return $context;
     }
 
     /**
      * {@inheritdoc}
+     *
      * @throws \RuntimeException
      */
     public function render($template, array $parameters = [])
     {
-        if (!$template instanceof StorageInterface)
-        {
+        if (!$template instanceof StorageInterface) {
             $template = new Storage($template, StorageInterface::TYPE_FILE);
         }
-        
-        if ($template->getType() === StorageInterface::TYPE_FILE)
-        {
+
+        if ($template->getType() === StorageInterface::TYPE_FILE) {
             $extension = pathinfo($template->getContent(), PATHINFO_EXTENSION);
             $engine = $this->getEngineByExtension($extension);
-            
-            if (null === $engine)
-            {
+
+            if (null === $engine) {
                 throw new \RuntimeException(sprintf('No view engine for extension "%s".', $extension));
             }
-        }
-        else
-        {
+        } else {
             $engine = $this->getDefaultEngine();
         }
-        
+
         // Merge with shared keys
-        foreach ($this->shared as $key => $value)
-        {
+        foreach ($this->shared as $key => $value) {
             $engine->share($key, $value);
         }
-        
+
         return $engine->render($template, $parameters);
     }
 }

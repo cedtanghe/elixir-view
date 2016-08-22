@@ -2,19 +2,18 @@
 
 namespace Elixir\View\Engine\Twig;
 
-use Elixir\View\Engine\Twig\Twig;
 use Twig_Extension;
 
 /**
  * @author Cédric Tanghe <ced.tanghe@gmail.com>
  */
-class Extension extends Twig_Extension 
+class Extension extends Twig_Extension
 {
     /**
-     * @var Twig 
+     * @var Twig
      */
     protected $twig;
-    
+
     /**
      * @param Twig $engine
      */
@@ -26,7 +25,7 @@ class Extension extends Twig_Extension
     /**
      * {@inheritdoc}
      */
-    public function getName() 
+    public function getName()
     {
         return 'elixir_extension';
     }
@@ -40,7 +39,7 @@ class Extension extends Twig_Extension
             'context' => $this->twig->context(),
             'helper' => $this->twig->getHelperManager(),
             'filter' => $this->twig->getFilterManager(),
-            'validator' => $this->twig->getValidatorManager()
+            'validator' => $this->twig->getValidatorManager(),
         ];
     }
 }

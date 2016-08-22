@@ -12,20 +12,20 @@ use Elixir\Validator\ValidatorManager;
 /**
  * @author Cédric Tanghe <ced.tanghe@gmail.com>
  */
-trait ServiceManagerTrait 
+trait ServiceManagerTrait
 {
     /**
-     * @var HelperManager 
+     * @var HelperManager
      */
     protected $helperManager;
-    
+
     /**
-     * @var FilterManager 
+     * @var FilterManager
      */
     protected $filterManager;
-    
+
     /**
-     * @var ValidatorManager 
+     * @var ValidatorManager
      */
     protected $validatorManager;
 
@@ -37,7 +37,7 @@ trait ServiceManagerTrait
         $this->helperManager = $manager;
         $this->helperManager->setContext($this);
     }
-    
+
     /**
      * @return HelperManager
      */
@@ -45,23 +45,24 @@ trait ServiceManagerTrait
     {
         return $this->helperManager;
     }
-    
+
     /**
      * @param string $name
-     * @param array $options
+     * @param array  $options
+     *
      * @return HelperInterface
+     *
      * @throws \InvalidArgumentException
      */
     public function helper($name, array $options = [])
     {
-        if ($this->helperManager)
-        {
+        if ($this->helperManager) {
             return $this->helperManager->get($name, $options);
         }
-        
+
         throw new \InvalidArgumentException(sprintf('Helper Manager is not defined.', $name));
     }
-    
+
     /**
      * @param FilterManager $manager
      */
@@ -69,7 +70,7 @@ trait ServiceManagerTrait
     {
         $this->filterManager = $manager;
     }
-    
+
     /**
      * @return FilterManager
      */
@@ -77,23 +78,24 @@ trait ServiceManagerTrait
     {
         return $this->filterManager;
     }
-    
+
     /**
      * @param string $name
-     * @param array $options
+     * @param array  $options
+     *
      * @return FilterInterface
+     *
      * @throws \InvalidArgumentException
      */
     public function filter($name, array $options = [])
     {
-        if ($this->filterManager)
-        {
+        if ($this->filterManager) {
             return $this->filterManager->get($name, $options);
         }
-        
+
         throw new \InvalidArgumentException(sprintf('Filter Manager is not defined.', $name));
     }
-    
+
     /**
      * @param ValidatorManager $manager
      */
@@ -101,7 +103,7 @@ trait ServiceManagerTrait
     {
         $this->validatorManager = $manager;
     }
-    
+
     /**
      * @return ValidatorManager
      */
@@ -109,20 +111,21 @@ trait ServiceManagerTrait
     {
         return $this->validatorManager;
     }
-    
+
     /**
      * @param string $name
-     * @param array $options
+     * @param array  $options
+     *
      * @return ValidatorInterface
+     *
      * @throws \InvalidArgumentException
      */
     public function validator($name, array $options = [])
     {
-        if ($this->validatorManager)
-        {
+        if ($this->validatorManager) {
             return $this->validatorManager->get($name, $options);
         }
-        
+
         throw new \InvalidArgumentException(sprintf('Validator Manager is not defined.', $name));
     }
 }

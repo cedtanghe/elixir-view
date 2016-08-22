@@ -7,13 +7,13 @@ use Elixir\View\Helper\ContextInterface;
 /**
  * @author Cédric Tanghe <ced.tanghe@gmail.com>
  */
-trait ContextTrait 
+trait ContextTrait
 {
     /**
      * @var ContextInterface
      */
     protected $context;
-    
+
     /**
      * {@inheritdoc}
      */
@@ -21,7 +21,7 @@ trait ContextTrait
     {
         $this->context = $context;
     }
-    
+
     /**
      * {@inheritdoc}
      */
@@ -29,20 +29,21 @@ trait ContextTrait
     {
         return $this->context;
     }
-    
+
     /**
      * {@inheritdoc}
      */
     public function injectInto(ContextInterface $context)
     {
         $context->setView($this);
+
         return $context;
     }
-    
+
     /**
      * @ignore
      */
-    public function __clone() 
+    public function __clone()
     {
         $this->context = null;
     }

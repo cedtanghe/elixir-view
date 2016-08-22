@@ -8,7 +8,7 @@ use Elixir\Dispatcher\DispatcherTrait;
 /**
  * @author Cédric Tanghe <ced.tanghe@gmail.com>
  */
-class SectionManager implements DispatcherInterface 
+class SectionManager implements DispatcherInterface
 {
     use DispatcherTrait;
 
@@ -33,31 +33,31 @@ class SectionManager implements DispatcherInterface
     protected $compiled = [];
 
     /**
-     * @var string 
+     * @var string
      */
     protected $current;
 
     /**
      * @param string $section
-     * @param array $options
+     * @param array  $options
+     *
      * @throws \LogicException
      */
-    public function open($section, array $options = []) 
+    public function open($section, array $options = [])
     {
-        if (in_array($section, $this->opened)) 
-        {
+        if (in_array($section, $this->opened)) {
             throw new \LogicException(sprintf('A section "%s" is already opened.', $section));
         }
-        
+
         $this->current = $section;
         $this->opened[] = $this->current;
         $this->sections[$this->current][] = '';
         $this->options[$this->current] = array_merge(
             isset($this->options[$this->current]) ? $this->options[$this->current] : [], $options
         );
-        
+
         unset($this->compiled[$this->current]);
-        
+
         ob_start();
     }
 
@@ -74,8 +74,7 @@ class SectionManager implements DispatcherInterface
      */
     public function close()
     {
-        if(count($this->opened) == 0)
-        {
+        if (count($this->opened) == 0) {
             throw new \LogicException('No section has been started.');
         }
 
@@ -86,12 +85,12 @@ class SectionManager implements DispatcherInterface
 
     /**
      * @param string $section
+     *
      * @return string
      */
-    public function mask($section) 
+    public function mask($section)
     {
-        if (isset($this->sections[$section])) 
-        {
+        if (isset($this->sections[$section])) {
             return sprintf('{{SECTION : %s}}', $section);
         }
 
@@ -100,14 +99,13 @@ class SectionManager implements DispatcherInterface
 
     /**
      * @param string $section
+     *
      * @return string
      */
-    public function compile($section) 
+    public function compile($section)
     {
-        if ($this->current != $section && isset($this->sections[$section])) 
-        {
-            if (isset($this->compiled[$section])) 
-            {
+        if ($this->current != $section && isset($this->sections[$section])) {
+            if (isset($this->compiled[$section])) {
                 return $this->compiled[$section];
             }
 
@@ -115,51 +113,43 @@ class SectionManager implements DispatcherInterface
             $content = '';
             $replace = '';
 
-            while (count($sections) > 0)
-            {
+            while (count($sections) > 0) {
                 $content = str_replace($this->parent(), $replace, array_shift($sections));
                 $replace = $content;
             }
 
-            if (false !== strpos($content, '{{SECTION :'))
-            {
-                if (preg_match_all('/{{SECTION : (.+)}}/', $content, $matches)) 
-                {
-                    foreach ($matches[1] as $s)
-                    {
+            if (false !== strpos($content, '{{SECTION :')) {
+                if (preg_match_all('/{{SECTION : (.+)}}/', $content, $matches)) {
+                    foreach ($matches[1] as $s) {
                         $content = str_replace($this->mask($s), $this->compile($s, ''), $content);
                     }
                 }
             }
 
             $event = new SectionEvent(
-                SectionEvent::COMPILE, 
+                SectionEvent::COMPILE,
                 [
-                    'section' => $section, 
-                    'content' => $content, 
-                    'options' => $this->options[$section]
+                    'section' => $section,
+                    'content' => $content,
+                    'options' => $this->options[$section],
                 ]
             );
-            
+
             $this->dispatch($event);
             $content = $event->getContent();
             $this->compiled[$section] = $content;
 
             return $content;
         }
-        
+
         return '';
     }
 
-    /**
-     * @return void
-     */
-    public function reset() 
+    public function reset()
     {
         $i = count($this->opened);
 
-        while ($i--) 
-        {
+        while ($i--) {
             ob_end_clean();
         }
 
@@ -172,15 +162,15 @@ class SectionManager implements DispatcherInterface
 
     /**
      * @param string $content
+     *
      * @return string
      */
-    public function parse($content) 
+    public function parse($content)
     {
-        foreach (array_keys($this->sections) as $section) 
-        {
+        foreach (array_keys($this->sections) as $section) {
             $content = str_replace($this->mask($section), $this->compile($section, ''), $content);
         }
-        
+
         return $content;
     }
 }

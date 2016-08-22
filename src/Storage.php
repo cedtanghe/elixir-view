@@ -2,18 +2,16 @@
 
 namespace Elixir\View;
 
-use Elixir\View\StorageInterface;
-
 /**
  * @author Cédric Tanghe <ced.tanghe@gmail.com>
  */
-class Storage implements StorageInterface 
+class Storage implements StorageInterface
 {
     /**
      * @var string
      */
     protected $content;
-    
+
     /**
      * @var string
      */
@@ -28,7 +26,7 @@ class Storage implements StorageInterface
         $this->content = $content;
         $this->type = $type;
     }
-    
+
     /**
      * {@inheritdoc}
      */

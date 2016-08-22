@@ -2,7 +2,6 @@
 
 namespace Elixir\View\Context;
 
-use Elixir\View\Context\ContextInterface;
 use Elixir\View\ViewContextInterface;
 
 /**
@@ -11,10 +10,10 @@ use Elixir\View\ViewContextInterface;
 abstract class ContextAbstract implements ContextInterface
 {
     /**
-     * @var ViewContextInterface 
+     * @var ViewContextInterface
      */
     protected $view;
-    
+
     /**
      * {@inheritdoc}
      */
@@ -23,16 +22,16 @@ abstract class ContextAbstract implements ContextInterface
         $this->view = clone $view;
         $this->view->setContext($this);
     }
-    
+
     /**
      * {@inheritdoc}
      */
     abstract public function render($template = null);
-    
+
     /**
      * @ignore
      */
-    public function __toString() 
+    public function __toString()
     {
         return $this->render(null);
     }

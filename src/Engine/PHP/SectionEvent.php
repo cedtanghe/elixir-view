@@ -7,7 +7,7 @@ use Elixir\Dispatcher\Event;
 /**
  * @author Cédric Tanghe <ced.tanghe@gmail.com>
  */
-class SectionEvent extends Event 
+class SectionEvent extends Event
 {
     /**
      * @var string
@@ -31,16 +31,17 @@ class SectionEvent extends Event
 
     /**
      * {@inheritdoc}
+     *
      * @param array $params
      */
-    public function __construct($type, array $params = []) 
+    public function __construct($type, array $params = [])
     {
         parent::__construct($type);
 
         $params += [
             'section' => null,
             'content' => null,
-            'options' => null
+            'options' => null,
         ];
 
         $this->section = $params['section'];
@@ -51,7 +52,7 @@ class SectionEvent extends Event
     /**
      * @return string
      */
-    public function getSection() 
+    public function getSection()
     {
         return $this->section;
     }
@@ -67,7 +68,7 @@ class SectionEvent extends Event
     /**
      * @param string $content
      */
-    public function setContent($content) 
+    public function setContent($content)
     {
         $this->content = $content;
     }

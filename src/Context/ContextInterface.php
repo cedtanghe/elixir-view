@@ -14,9 +14,10 @@ interface ContextInterface
      * @param ViewContextInterface $view
      */
     public function setView(ViewContextInterface $view);
-    
+
     /**
      * @param string|StorageInterface $template
+     *
      * @return string
      */
     public function render($template = null);

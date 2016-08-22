@@ -5,13 +5,13 @@ namespace Elixir\View;
 /**
  * @author Cédric Tanghe <ced.tanghe@gmail.com>
  */
-trait SharedTrait 
+trait SharedTrait
 {
     /**
-     * @var array 
+     * @var array
      */
     protected $shared = [];
-    
+
     /**
      * {@inheritdoc}
      */
@@ -19,7 +19,7 @@ trait SharedTrait
     {
         $this->shared[$key] = $value;
     }
-    
+
     /**
      * {@inheritdoc}
      */
@@ -27,7 +27,7 @@ trait SharedTrait
     {
         unset($this->shared[$key]);
     }
-    
+
     /**
      * {@inheritdoc}
      */
